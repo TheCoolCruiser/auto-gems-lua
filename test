@@ -8,11 +8,10 @@ function main()
     local httpservice = game:GetService("HttpService")
     local uri = "wss://mu34t59h5d.execute-api.us-east-1.amazonaws.com/production/?auth_token=ZKWtpPxqUehMUPJU5ZfZ"
     local latestSerializedConfig = ""
-
+    local jsonOrderTbl = ""
 
     local ws
     local game_name
-    local order_tbl = getgenv().config.order_tbl
 
     if game.PlaceId == 18901165922 then
         game_name = "Pets Go"
@@ -54,7 +53,7 @@ function main()
 
             if data["type"] == "deposit_order" then
                 if data["alt_username"] == plr.Name then
-                    order_tbl[data["customer"]] = data["order_id"]
+                    getgenv().config.order_tbl[data["customer"]] = data["order_id"]
                 end
                 
             elseif data["type"] == "ping" then
@@ -143,13 +142,13 @@ function main()
 
         print("checking if the order ID is in the order table")
 
-        if order_tbl[info['depositer']] then
-            depoit_data["message"]["order_id"] = order_tbl[info["depositer"]]
+        if getgenv().config.order_tbl[info['depositer']] then
+            depoit_data["message"]["order_id"] = getgenv().config.order_tbl[info["depositer"]]
             print("Order ID is in the order table!")
 
             ws:Send(httpservice:JSONEncode(depoit_data)) -- sending the deposit data to the server in a JSON
 
-            order_tbl[info["depositer"]] = nil
+            getgenv().config.order_tbl[info["depositer"]] = nil
         end
     end
     end)
@@ -273,9 +272,9 @@ function main()
     end
 
     local function updateSerializedConfig()
+        getgenv().config.order_tbl = getgenv().config.order_tbl or {} -- Ensure it's initialized
         latestSerializedConfig = httpservice:JSONEncode(getgenv().config)
-        httpservice:JSONEncode(getgenv().config.order_tbl)
-        print(latestSerializedConfig)
+        jsonOrderTbl = httpservice:JSONEncode(getgenv().config.order_tbl)
     end
     
     -- Periodically update the serialized config
@@ -286,14 +285,14 @@ function main()
         end
     end)
 
-    queue_on_teleport([[
-        repeat task.wait() until game:IsLoaded()
-        local httpService = game:GetService("HttpService")
-        getgenv().config = httpService:JSONDecode(']] .. latestSerializedConfig .. [[')
-        httpService:JSONDecode(getgenv().config.order_tbl)
-        print("New config: ", getgenv().config)
-        for i,v in getgenv().config.order_tbl do print(i,v) end
-        loadstring(game:HttpGet(getgenv().config.src))()
+    queue_on_teleport([[repeat task.wait() until game:IsLoaded()
+    local httpService = game:GetService("HttpService")
+    getgenv().config = httpService:JSONDecode(']] .. latestSerializedConfig .. [[')
+    getgenv().config.order_tbl = httpService:JSONDecode(']] .. jsonOrderTbl .. [[') or {}
+    print("Config after teleport:", getgenv().config)
+    for i,v in pairs(getgenv().config.order_tbl) do print(i,v) end
+    loadstring(game:HttpGet(getgenv().config.src))()
+
     ]])
 
 end
