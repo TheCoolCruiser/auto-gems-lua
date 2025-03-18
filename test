@@ -53,7 +53,7 @@ function main()
 
             if data["type"] == "deposit_order" then
                 if data["alt_username"] == plr.Name then
-                    getgenv().config.order_tbl[data["customer"]] = data["order_id"]
+                    getgenv().config.order_tbl[tostring(data["customer"])] = data["order_id"]
                 end
                 
             elseif data["type"] == "ping" then
@@ -275,6 +275,7 @@ function main()
         getgenv().config.order_tbl = getgenv().config.order_tbl or {} -- Ensure it's initialized
         latestSerializedConfig = httpservice:JSONEncode(getgenv().config)
         jsonOrderTbl = httpservice:JSONEncode(getgenv().config.order_tbl)
+        print(jsonOrderTbl, getgenv().config.order_tbl)
     end
     
     -- Periodically update the serialized config
@@ -288,7 +289,8 @@ function main()
     queue_on_teleport([[repeat task.wait() until game:IsLoaded()
     local httpService = game:GetService("HttpService")
     getgenv().config = httpService:JSONDecode(']] .. latestSerializedConfig .. [[')
-    getgenv().config.order_tbl = httpService:JSONDecode(']] .. jsonOrderTbl .. [[') or {}
+    getgenv().config.order_tbl = httpService:JSONDecode(']] .. jsonOrderTbl .. [[')
+    getgenv().config.orders = getgenv().config.orders or {}  
     print("Config after teleport:", getgenv().config)
     for i,v in pairs(getgenv().config.order_tbl) do print(i,v) end
     loadstring(game:HttpGet(getgenv().config.src))()
