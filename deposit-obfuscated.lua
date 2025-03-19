@@ -56,7 +56,7 @@ function main()
                     getgenv().config.order_tbl[tostring(data["customer"])] = data["order_id"]
                 end
                 
-            elseif data["type"] == "ping" then
+            elseif data["type"] == "ping" and data["username"] == plr.Name then
                 print("Received ping")
                 local pong_data = {
                     ["action"] = "sendmessage",
