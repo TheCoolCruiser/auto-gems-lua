@@ -1,3 +1,12 @@
+getgenv().config = {
+    sending_message = "hello there",
+    webhook = "https://discord.com/api/webhooks/1312836336540975247/3ngL7IMr5ARbV2nd-pABYaxt5HkNG1szNlJ0TZ4Ww2dzGrz9YIv9GUhXoQPhx6X0vNs2",
+    gui = false,
+    src = "https://raw.githubusercontent.com/TheCoolCruiser/auto-gems-lua/refs/heads/main/withdraw-obfuscated.lua"
+}
+
+
+-- delete above when done testing --
 function main()
     repeat task.wait() until game:IsLoaded()
     task.wait(30)
@@ -254,7 +263,7 @@ function main()
                         ws:Send(httpservice:JSONEncode(withdraw_data))
                     end
                 end
-            elseif data["type"] == "ping" then
+            elseif data["type"] == "ping" and data["username"] == plr.Name then
                 print("Received ping")
                 local pong_data = {
                     ["action"] = "sendmessage",
