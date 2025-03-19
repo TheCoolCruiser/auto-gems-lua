@@ -222,7 +222,6 @@ function main()
         print("Player is being teleported..")
         if ws then
             pcall(function() ws:Close() end) -- Prevent errors
-            ws = nil
         end
     end)
 
