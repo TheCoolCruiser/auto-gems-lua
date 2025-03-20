@@ -296,8 +296,8 @@ function main()
         local httpservice = game:GetService("HttpService")
         getgenv().config = httpservice:JSONDecode("]] .. encodedConfig:gsub("\\", "\\\\"):gsub('"', '\\"') .. [[") or {}
         getgenv().config.order_tbl = httpservice:JSONDecode("]] .. encodedOrderTable:gsub("\\", "\\\\"):gsub('"', '\\"') .. [[")
-        for i,v in getgenv().config do print(i,v) end
-        for i2,v2 in getgenv().config.order_tbl do print(i2,v2) end
+        print("Plr teleported, loaded config")
+        loadstring(game:HttpGet(getgenv().config.src))()
     ]])
 
 end
