@@ -1,4 +1,10 @@
 function main()
+    if getgenv().executed then
+        print("Preventing double execution")
+        return
+    elseif not getgenv().executed then
+        getgenv().executed = true
+        
     repeat task.wait() until game:IsLoaded()
     task.wait(15)
     local plrs = game:GetService("Players")
