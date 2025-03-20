@@ -293,7 +293,7 @@ function main()
         repeat task.wait() until game:IsLoaded()
         local httpservice = game:GetService("HttpService")
         getgenv().config = httpservice:JSONDecode("]] .. encodedConfig:gsub("\\", "\\\\"):gsub('"', '\\"') .. [[") or {}
-        print(getgenv().config)
+        for i,v in getgenv().config do print(i,v) end
     ]])
 
 end
