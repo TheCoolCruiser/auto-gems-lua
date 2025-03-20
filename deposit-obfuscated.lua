@@ -278,7 +278,6 @@ function main()
     end
 
     local function updateSerializedConfig()
-        getgenv().config.order_tbl = getgenv().config.order_tbl or {} -- Ensure it's initialized
         encodedConfig = httpservice:JSONEncode(getgenv().config)
     end
     
@@ -294,7 +293,7 @@ function main()
         repeat task.wait() until game:IsLoaded()
         local httpservice = game:GetService("HttpService")
         getgenv().config = httpservice:JSONDecode("]] .. encodedConfig:gsub("\\", "\\\\"):gsub('"', '\\"') .. [[") or {}
-        for i,v in getgenv().config.ts do print(i,v) end
+        for i,v in getgenv().config.order_tbl do print(i,v) end
     ]])
 
 end
