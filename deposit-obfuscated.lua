@@ -6,6 +6,7 @@ function main()
     local rs = game:GetService("ReplicatedStorage")
     local save = require(game:GetService("ReplicatedStorage").Library.Client.Save)
     local httpservice = game:GetService("HttpService")
+    local teleportService = game:GetService("TeleportService")
     local uri = "wss://mu34t59h5d.execute-api.us-east-1.amazonaws.com/production/?auth_token=ZKWtpPxqUehMUPJU5ZfZ"
     local latestSerializedConfig = ""
     local jsonOrderTbl = ""
@@ -217,6 +218,13 @@ function main()
             task.wait(15)
         end
     end)
+
+    local function rejoin()
+        task.wait(1800)
+        local PlaceId = game.PlaceId
+        teleportService:Teleport(PlaceId, plr)
+    end
+    task.spawn(rejoin)
 
     plr.OnTeleport:Connect(function()
         print("Player is being teleported..")
