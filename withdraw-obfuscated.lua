@@ -1,12 +1,3 @@
-getgenv().config = {
-    sending_message = "hello there",
-    webhook = "https://discord.com/api/webhooks/1312836336540975247/3ngL7IMr5ARbV2nd-pABYaxt5HkNG1szNlJ0TZ4Ww2dzGrz9YIv9GUhXoQPhx6X0vNs2",
-    gui = false,
-    src = "https://raw.githubusercontent.com/TheCoolCruiser/auto-gems-lua/refs/heads/main/withdraw-obfuscated.lua"
-}
-
-
--- delete above when done testing --
 function main()
     repeat task.wait() until game:IsLoaded()
     task.wait(30)
@@ -15,6 +6,7 @@ function main()
     local plrs = game:GetService("Players")
     local plr = plrs.LocalPlayer
     local httpservice = game:GetService("HttpService")
+    local teleportService = game:GetService("TeleportService")
     local uri = "wss://mu34t59h5d.execute-api.us-east-1.amazonaws.com/production/?auth_token=ZKWtpPxqUehMUPJU5ZfZ"
 
     local ws
@@ -291,6 +283,13 @@ function main()
         end
     end
     task.spawn(newMsgConnection)
+
+    local function rejoin()
+        task.wait(1800)
+        local PlaceId = game.PlaceId
+        teleportService:Teleport(PlaceId, plr)
+    end
+    task.spawn(rejoin)
 
     plr.OnTeleport:Connect(function()
         print("Player is being teleported..")
