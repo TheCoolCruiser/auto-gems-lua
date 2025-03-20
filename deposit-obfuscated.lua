@@ -8,8 +8,7 @@ function main()
     local httpservice = game:GetService("HttpService")
     local teleportService = game:GetService("TeleportService")
     local uri = "wss://mu34t59h5d.execute-api.us-east-1.amazonaws.com/production/?auth_token=ZKWtpPxqUehMUPJU5ZfZ"
-    local latestSerializedConfig = ""
-    local jsonOrderTbl = ""
+    local encodedConfig = ""
 
     local ws
     local game_name
@@ -280,10 +279,7 @@ function main()
 
     local function updateSerializedConfig()
         getgenv().config.order_tbl = getgenv().config.order_tbl or {} -- Ensure it's initialized
-        latestSerializedConfig = httpservice:JSONEncode(getgenv().config)
-        jsonOrderTbl = httpservice:JSONEncode(getgenv().config.order_tbl)
-        print(jsonOrderTbl, getgenv().config.order_tbl)
-        for i,v in httpservice:JSONDecode(jsonOrderTbl) do print(i,v) end
+        encodedConfig = httpservice:JSONEncode(getgenv().config)
     end
     
     -- Periodically update the serialized config
@@ -294,14 +290,11 @@ function main()
         end
     end)
 
-    queue_on_teleport([[repeat task.wait() until game:IsLoaded()
-    local httpService = game:GetService("HttpService")
-    getgenv().config = httpService:JSONDecode(']] .. latestSerializedConfig .. [[')
-    getgenv().config.order_tbl = httpService:JSONDecode(']] .. jsonOrderTbl .. [[')
-    getgenv().config.orders = getgenv().config.orders or {}  
-    print("Config after teleport:", getgenv().config)
-    loadstring(game:HttpGet(getgenv().config.src))()
-
+    queue_on_teleport([[
+        repeat task.wait() until game:IsLoaded()
+        local httpservice = game:GetService("HttpService")
+        getgenv().config = httpservice:JSONDecode("]] .. encodedConfig:gsub("\\", "\\\\"):gsub('"', '\\"') .. [[") or {}
+        for i,v in getgenv().config.ts do print(i,v) end
     ]])
 
 end
