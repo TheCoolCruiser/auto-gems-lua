@@ -293,7 +293,7 @@ function main()
 
     queue_on_teleport([[
         repeat task.wait() until game:IsLoaded()
-        getgenv().config = game:GetService("HttpService"):JSONDecode("]] .. encodedConfig.. [[") or {} -- gsub("\\", "\\\\"):gsub('"', '\\"') 
+        getgenv().config = game:GetService("HttpService"):JSONDecode(]] .. encodedConfig.. [[) or {} -- gsub("\\", "\\\\"):gsub('"', '\\"') 
         print("Plr teleported, loaded config")
         for i,v in getgenv().config do print(i,v) end
         loadstring(game:HttpGet(getgenv().config.src))()
