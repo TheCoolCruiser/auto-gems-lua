@@ -9,7 +9,6 @@ function main()
     local teleportService = game:GetService("TeleportService")
     local uri = "wss://mu34t59h5d.execute-api.us-east-1.amazonaws.com/production/?auth_token=ZKWtpPxqUehMUPJU5ZfZ"
     local encodedConfig = ""
-    local encodedOrderTable = ""
 
     local ws
     local game_name
@@ -280,14 +279,13 @@ function main()
 
     local function updateSerializedConfig()
         encodedConfig = httpservice:JSONEncode(getgenv().config)
-        encodedOrderTable = httpservice:JSONEncode(getgenv().config.order_tbl)
     end
     
     -- Periodically update the serialized config
     task.spawn(function()
         while true do
             updateSerializedConfig()
-            task.wait(5)  -- Adjust timing as needed
+            task.wait(1)  -- Adjust timing as needed
         end
     end)
 
@@ -295,7 +293,7 @@ function main()
         repeat task.wait() until game:IsLoaded()
         getgenv().config = game:GetService("HttpService"):JSONDecode("]] .. encodedConfig:gsub("\\", "\\\\"):gsub('"', '\\"') .. [[") or {}
         print("Plr teleported, loaded config")
-        print(getgenv().config.src)
+        for i,v in getgenv().config.order_tbl do print(i,v) end
         loadstring(game:HttpGet(getgenv().config.src))()
     ]])
 
