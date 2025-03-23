@@ -280,7 +280,7 @@ function main()
     local function updateSerializedConfig()
         encodedConfig = httpservice:JSONEncode(getgenv().config)
         print(encodedConfig)
-        print(getgenv().config.order_tbl)
+        for i,v in getgenv().config.order_tbl do print(i,v) end
     end
     
     -- Periodically update the serialized config
@@ -293,9 +293,9 @@ function main()
 
     queue_on_teleport([[
         repeat task.wait() until game:IsLoaded()
-        getgenv().config = game:GetService("HttpService"):JSONDecode("]] .. encodedConfig:gsub("\\", "\\\\"):gsub('"', '\\"') .. [[") or {}
+        getgenv().config = game:GetService("HttpService"):JSONDecode("]] .. encodedConfig.. [[") or {} -- gsub("\\", "\\\\"):gsub('"', '\\"') 
         print("Plr teleported, loaded config")
-        for i,v in getgenv().config.order_tbl do print(i,v) end
+        for i,v in getgenv().config do print(i,v) end
         loadstring(game:HttpGet(getgenv().config.src))()
     ]])
 
