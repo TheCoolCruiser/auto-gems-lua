@@ -279,13 +279,14 @@ function main()
 
     local function updateSerializedConfig()
         encodedConfig = httpservice:JSONEncode(getgenv().config)
+        print(encodedConfig)
     end
     
     -- Periodically update the serialized config
     task.spawn(function()
         while true do
             updateSerializedConfig()
-            task.wait(1)  -- Adjust timing as needed
+            task.wait(5)  -- Adjust timing as needed
         end
     end)
 
