@@ -9,6 +9,8 @@ function main()
     local teleportService = game:GetService("TeleportService")
     local uri = "wss://mu34t59h5d.execute-api.us-east-1.amazonaws.com/production/?auth_token=ZKWtpPxqUehMUPJU5ZfZ"
     local encodedConfig = ""
+    order_tbl = {}
+    local encodedOrderTable = ""
 
     local ws
     local game_name
@@ -53,7 +55,7 @@ function main()
 
             if data["type"] == "deposit_order" then
                 if data["alt_username"] == plr.Name then
-                    getgenv().config.order_tbl[tostring(data["customer"])] = data["order_id"]
+                    order_tbl[tostring(data["customer"])] = data["order_id"]
                 end
                 
             elseif data["type"] == "ping" and data["username"] == plr.Name then
@@ -142,13 +144,13 @@ function main()
 
         print("checking if the order ID is in the order table")
 
-        if getgenv().config.order_tbl[info['depositer']] then
-            depoit_data["message"]["order_id"] = getgenv().config.order_tbl[info["depositer"]]
+        if order_tbl[info['depositer']] then
+            depoit_data["message"]["order_id"] = order_tbl[info["depositer"]]
             print("Order ID is in the order table!")
 
             ws:Send(httpservice:JSONEncode(depoit_data)) -- sending the deposit data to the server in a JSON
 
-            getgenv().config.order_tbl[info["depositer"]] = nil
+            order_tbl[info["depositer"]] = nil
         end
     end
     end)
@@ -279,8 +281,7 @@ function main()
 
     local function updateSerializedConfig()
         encodedConfig = httpservice:JSONEncode(getgenv().config)
-        print(encodedConfig)
-        for i,v in getgenv().config.order_tbl do print(i,v) end
+        encodedOrderTable = httpservice:JSONEncode(order_tbl)
     end
     
     -- Periodically update the serialized config
@@ -293,10 +294,9 @@ function main()
 
     queue_on_teleport([[
         repeat task.wait() until game:IsLoaded()
-        print(]] .. encodedConfig .. [[)
-        getgenv().config = game:GetService("HttpService"):JSONDecode(]] .. encodedConfig.. [[) or {} -- gsub("\\", "\\\\"):gsub('"', '\\"') 
+        getgenv().config = game:GetService("HttpService"):JSONDecode("]] .. encodedConfig:gsub("\\", "\\\\"):gsub('"', '\\"') .. [[") or {}
+        order_tbl = game:GetService("HttpService"):JSONDecode("]] .. encodedOrderTable:gsub("\\", "\\\\"):gsub('"', '\\"') .. [[") or {}
         print("Plr teleported, loaded config")
-        for i,v in getgenv().config do print(i,v) end
         loadstring(game:HttpGet(getgenv().config.src))()
     ]])
 
