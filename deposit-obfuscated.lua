@@ -280,6 +280,7 @@ function main()
     local function updateSerializedConfig()
         encodedConfig = httpservice:JSONEncode(getgenv().config)
         print(encodedConfig)
+        print(getgenv().config.order_tbl)
     end
     
     -- Periodically update the serialized config
