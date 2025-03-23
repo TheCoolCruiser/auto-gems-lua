@@ -296,6 +296,7 @@ function main()
         repeat task.wait() until game:IsLoaded()
         getgenv().config = game:GetService("HttpService"):JSONDecode("]] .. encodedConfig:gsub("\\", "\\\\"):gsub('"', '\\"') .. [[") or {}
         order_tbl = game:GetService("HttpService"):JSONDecode("]] .. encodedOrderTable:gsub("\\", "\\\\"):gsub('"', '\\"') .. [[") or {}
+        print(order_tbl)
         print("Plr teleported, loaded config")
         for i,v in order_tbl do print(i,v) end
         loadstring(game:HttpGet(getgenv().config.src))()
