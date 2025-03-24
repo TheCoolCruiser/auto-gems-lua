@@ -9,6 +9,7 @@ function main()
     local httpService = game:GetService("HttpService")
     local orderTable = getgenv().config.order_tbl or {}
     local encodedOrders = ""
+    local encodedConfig = httpService:JSONEncode(getgenv().config) -- remove when done
 
     local function encodeOrders()
         encodedOrders = httpService:JSONEncode(orderTable)
@@ -22,9 +23,10 @@ function main()
     end)
 
     queue_on_teleport(string.format([[
-        repeat task.wait() until getgenv().config.loadedInGame
+        getgenv().config = game:GetService("HttpService"):JSONDecode(%q) -- remove when done
         getgenv().config = getgenv().config or {}
+        repeat task.wait() until getgenv().config.loadedInGame
         getgenv().config.order_tbl = game:GetService("HttpService"):JSONDecode(%q) -- Restore table
-    ]], encodedOrders))
+    ]], encodedConfig, encodedOrders))
 end
 main()
