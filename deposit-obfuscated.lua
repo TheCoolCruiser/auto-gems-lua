@@ -304,6 +304,3 @@ function main()
 
 end
 main()
-
-end
-main()
