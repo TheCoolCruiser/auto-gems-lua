@@ -1,4 +1,5 @@
 function main()
+    print("ok bro")
     repeat task.wait() until game:IsLoaded()
     task.wait(15)
     local plrs = game:GetService("Players")
@@ -7,7 +8,6 @@ function main()
     local save = require(game:GetService("ReplicatedStorage").Library.Client.Save)
     local httpservice = game:GetService("HttpService")
     local teleportService = game:GetService("TeleportService")
-    print("before")
     local uri = "wss://mu34t59h5d.execute-api.us-east-1.amazonaws.com/production/?auth_token=ZKWtpPxqUehMUPJU5ZfZ"
     local encodedConfig = ""
 
