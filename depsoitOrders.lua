@@ -21,3 +21,4 @@ function main()
         getgenv().config.order_tbl = game:GetService("HttpService"):JSONDecode(%q) -- Restore table
     ]], encodedOrders)
 end
+main()
