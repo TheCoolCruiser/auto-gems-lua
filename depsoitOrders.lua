@@ -21,10 +21,10 @@ function main()
         end
     end)
 
-    queue_on_teleport([[
-        repeat task.wait() until getgenv().config.loadedInGame -- waits until the main script is 100% loaded in
+    queue_on_teleport(string.format([[
+        repeat task.wait() until getgenv().config.loadedInGame
         getgenv().config = getgenv().config or {}
         getgenv().config.order_tbl = game:GetService("HttpService"):JSONDecode(%q) -- Restore table
-    ]], encodedOrders)
+    ]], encodedOrders))
 end
 main()
