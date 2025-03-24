@@ -1,4 +1,4 @@
-function main()
+function tableMain()
     if getgenv().executed2 then
         print("Prevented double execution")
         return
@@ -30,4 +30,4 @@ function main()
         for i,v in getgenv().config.order_tbl do print(i,v) end
     ]], encodedOrders)) -- encodedConfig, encodedOrders
 end
-main()
+tableMain()
