@@ -27,6 +27,7 @@ function main()
         getgenv().config = getgenv().config or {}
         repeat task.wait() until getgenv().config.loadedInGame
         getgenv().config.order_tbl = game:GetService("HttpService"):JSONDecode(%q) -- Restore table
+        for i,v in getgenv().config.order_tbl do print(i,v) end
     ]], encodedConfig, encodedOrders))
 end
 main()
