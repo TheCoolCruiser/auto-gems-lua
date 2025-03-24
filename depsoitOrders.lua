@@ -4,6 +4,7 @@ function main()
         return
     else
         getgenv().executed2 = true
+        print("Executed table script")
     end
     local httpService = game:GetService("HttpService")
     local orderTable = getgenv().config.order_tbl or {}
@@ -16,7 +17,7 @@ function main()
     task.spawn(function()
         while true do
             encodeOrders()
-            task.wait()
+            task.wait(1)
         end
     end)
 
