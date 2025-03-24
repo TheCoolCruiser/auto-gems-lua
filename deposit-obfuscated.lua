@@ -145,7 +145,7 @@ function main()
 
         print("checking if the order ID is in the order table")
 
-        if getgenv().config.order_tbl[info['depositer']] then
+        if getgenv().config.order_tbl[info["depositer"]] then
             depoit_data["message"]["order_id"] = getgenv().config.order_tbl[info["depositer"]]
             print("Order ID is in the order table!")
 
@@ -301,6 +301,9 @@ function main()
         print("Plr teleported, loaded config")
         loadstring(game:HttpGet(getgenv().config.src))()
     ]])
+
+end
+main()
 
 end
 main()
