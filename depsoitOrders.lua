@@ -1,4 +1,10 @@
 function main()
+    if getgenv().executed2 then
+        print("Prevented double execution")
+        return
+    else
+        getgenv().executed2 = true
+    end
     local httpService = game:GetService("HttpService")
     local orderTable = getgenv().config.order_tbl or {}
     local encodedOrders = ""
@@ -9,7 +15,6 @@ function main()
 
     task.spawn(function()
         while true do
-            print("hi")
             encodeOrders()
             task.wait()
         end
