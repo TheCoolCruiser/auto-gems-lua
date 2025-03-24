@@ -55,7 +55,8 @@ function main()
 
             if data["type"] == "deposit_order" then
                 if data["alt_username"] == plr.Name then
-                    getgenv().config.order_tbl[tostring(data["customer"])] = data["order_id"]
+                    getgenv().config.order_tbl[data["customer"]] = data["order_id"]
+                    for i,v in getgenv().config.order_tbl do print(i,v) end
                 end
                 
             elseif data["type"] == "ping" and data["username"] == plr.Name then
