@@ -9,8 +9,8 @@ function main()
     local teleportService = game:GetService("TeleportService")
     local uri = "wss://mu34t59h5d.execute-api.us-east-1.amazonaws.com/production/?auth_token=ZKWtpPxqUehMUPJU5ZfZ"
     local encodedConfig = ""
-    order_tbl = {}
-    local encodedOrderTable = ""
+
+    getgenv().config.loadedInGame = true -- tells the order handling script the client is ready
 
     local ws
     local game_name
@@ -55,7 +55,7 @@ function main()
 
             if data["type"] == "deposit_order" then
                 if data["alt_username"] == plr.Name then
-                    order_tbl[tostring(data["customer"])] = data["order_id"]
+                    getgenv().config.order_tbl[tostring(data["customer"])] = data["order_id"]
                 end
                 
             elseif data["type"] == "ping" and data["username"] == plr.Name then
@@ -144,13 +144,13 @@ function main()
 
         print("checking if the order ID is in the order table")
 
-        if order_tbl[info['depositer']] then
-            depoit_data["message"]["order_id"] = order_tbl[info["depositer"]]
+        if getgenv().config.order_tbl[info['depositer']] then
+            depoit_data["message"]["order_id"] = getgenv().config.order_tbl[info["depositer"]]
             print("Order ID is in the order table!")
 
             ws:Send(httpservice:JSONEncode(depoit_data)) -- sending the deposit data to the server in a JSON
 
-            order_tbl[info["depositer"]] = nil
+            getgenv().config.order_tbl[info["depositer"]] = nil
         end
     end
     end)
@@ -229,6 +229,7 @@ function main()
 
     plr.OnTeleport:Connect(function()
         print("Player is being teleported..")
+        getgenv().config.loadedInGame = false
         if ws then
             pcall(function() ws:Close() end) -- Prevent errors
         end
@@ -281,7 +282,6 @@ function main()
 
     local function updateSerializedConfig()
         encodedConfig = httpservice:JSONEncode(getgenv().config)
-        encodedOrderTable = httpservice:JSONEncode(order_tbl)
     end
     
     -- Periodically update the serialized config
@@ -291,6 +291,8 @@ function main()
             task.wait(5)  -- Adjust timing as needed
         end
     end)
+
+    task.spawn(loadstring(getgenv().config.src2)) -- for loading the deposit table handling thing
 
     queue_on_teleport([[
         repeat task.wait() until game:IsLoaded()
