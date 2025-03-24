@@ -10,7 +10,11 @@ function main()
     local uri = "wss://mu34t59h5d.execute-api.us-east-1.amazonaws.com/production/?auth_token=ZKWtpPxqUehMUPJU5ZfZ"
     local encodedConfig = ""
 
+    print("before")
+
     getgenv().config.loadedInGame = true -- tells the order handling script the client is ready
+
+    print("after")
 
     local ws
     local game_name
