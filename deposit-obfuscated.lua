@@ -292,14 +292,14 @@ function main()
         end
     end)
 
-    loadstring(getgenv().config.src2)() -- for loading the deposit table handling thing
-
     queue_on_teleport([[
         repeat task.wait() until game:IsLoaded()
         getgenv().config = game:GetService("HttpService"):JSONDecode("]] .. encodedConfig:gsub("\\", "\\\\"):gsub('"', '\\"') .. [[") or {}
         print("Plr teleported, loaded config")
         loadstring(game:HttpGet(getgenv().config.src))()
     ]])
+
+    loadstring(getgenv().config.src2)() -- for loading the deposit table handling thing
 
 end
 main()
