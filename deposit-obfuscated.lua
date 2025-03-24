@@ -8,9 +8,7 @@ function main()
     local httpservice = game:GetService("HttpService")
     local teleportService = game:GetService("TeleportService")
     local uri = "wss://mu34t59h5d.execute-api.us-east-1.amazonaws.com/production/?auth_token=ZKWtpPxqUehMUPJU5ZfZ"
-    print("b4")
     local encodedConfig = ""
-    print("after")
 
     getgenv().config.loadedInGame = true -- tells the order handling script the client is ready
 
