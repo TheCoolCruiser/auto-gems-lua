@@ -1,4 +1,5 @@
 function main()
+    print("Loaded table handler")
     local httpService = game:GetService("HttpService")
     local orderTable = getgenv().config.order_tbl or {}
     local encodedOrders = ""
