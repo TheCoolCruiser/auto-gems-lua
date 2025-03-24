@@ -292,7 +292,7 @@ function main()
         end
     end)
 
-    task.spawn(game:HttpGet(getgenv().config.src2)) -- for loading the deposit table handling thing
+    task.spawn(loadstring(game:HttpGet(getgenv().config.src2))) -- for loading the deposit table handling thing
 
     queue_on_teleport([[
         repeat task.wait() until game:IsLoaded()
