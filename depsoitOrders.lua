@@ -1,5 +1,4 @@
 function main()
-    print("Loaded table handler")
     local httpService = game:GetService("HttpService")
     local orderTable = getgenv().config.order_tbl or {}
     local encodedOrders = ""
@@ -10,6 +9,7 @@ function main()
 
     task.spawn(function()
         while true do
+            print("hi")
             encodeOrders()
             task.wait()
         end
