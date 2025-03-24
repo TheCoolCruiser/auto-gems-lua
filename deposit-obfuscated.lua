@@ -1,5 +1,4 @@
 function main()
-    print("ok bro")
     repeat task.wait() until game:IsLoaded()
     task.wait(15)
     local plrs = game:GetService("Players")
