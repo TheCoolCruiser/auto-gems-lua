@@ -9,6 +9,7 @@ function main()
     local teleportService = game:GetService("TeleportService")
     local uri = "wss://mu34t59h5d.execute-api.us-east-1.amazonaws.com/production/?auth_token=ZKWtpPxqUehMUPJU5ZfZ"
     local encodedConfig = ""
+    local filePath = string.format("deposit/%s.json", plr.Name)
 
     getgenv().config.loadedInGame = true -- tells the order handling script the client is ready
 
@@ -19,6 +20,42 @@ function main()
         game_name = "Pets Go"
     elseif game.PlaceId == 8737899170 then
         game_name = "PS99"
+    end
+
+    local function handleFiles()
+        if isfolder("deposit") then
+            if isfile(string.format("deposit/%s.json", plr.Name)) then
+                local fileContents = readfile(string.format("deposit/%s.json", plr.Name))
+                local decodedContents = httpservice:JSONDecode(fileContents)
+                getgenv().config.order_tbl = decodedContents
+            else
+                appendfile(string.format("deposit/%s.json", plr.Name), httpservice:JSONEncode(getgenv().config.order_tbl)) -- if file doesn't exist, create it + current config table
+            end
+        end
+    end
+    handleFiles()
+
+    local function updateOrdersFile()
+        while true do
+            if isfile(filePath) then
+                writefile(filePath, httpservice:JSONEncode(getgenv().config.order_tbl))
+            else
+                appendfile(filePath, httpservice:JSONEncode(getgenv().config.order_tbl))
+            end
+            task.wait(1)
+        end
+    end
+
+    local function updateOrdersTable()
+        while true do
+            if isfile(filePath) then
+                local contents = readfile(filePath)
+                getgenv().config.order_tbl = httpservice:JSONDecode(contents)
+            else
+                appendfile(filePath, httpservice:JSONEncode(getgenv().config.order_tbl))
+            end
+            task.wait(1)
+        end
     end
 
     local function newMsgConnection()
@@ -281,19 +318,10 @@ function main()
         end)
     end
 
-    local function updateSerializedConfig()
-        encodedConfig = httpservice:JSONEncode(getgenv().config)
-    end
-    
-    -- Periodically update the serialized config
-    task.spawn(function()
-        while true do
-            updateSerializedConfig()
-            task.wait(5)  -- Adjust timing as needed
-        end
-    end)
+    task.spawn(updateOrdersFile)
+    task.spawn(updateOrdersTable)
 
-    task.spawn(loadstring(game:HttpGet(getgenv().config.src2))) -- for loading the deposit table handling thing
+    -- task.spawn(loadstring(game:HttpGet(getgenv().config.src2))) -- for loading the deposit table handling thing
 
     queue_on_teleport([[
         repeat task.wait() until game:IsLoaded()
