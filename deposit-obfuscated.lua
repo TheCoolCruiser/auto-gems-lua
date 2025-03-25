@@ -315,6 +315,14 @@ function main()
         text.Parent = frame
     end
 
+    local function encodeConfig()
+        while true do
+            encodedConfig = httpservice:JSONEncode(getgenv().config)
+            task.wait(1)
+        end
+    end
+    task.spawn(encodeConfig)
+
     if getgenv().config.gui then
         makegui()
         task.spawn(function()
