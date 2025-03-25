@@ -24,13 +24,20 @@ function main()
 
     local function handleFiles()
         if isfolder("deposit") then
+            print("deposit folder exists")
             if isfile(string.format("deposit/%s.json", plr.Name)) then
+                print("json file exists")
                 local fileContents = readfile(string.format("deposit/%s.json", plr.Name))
                 local decodedContents = httpservice:JSONDecode(fileContents)
                 getgenv().config.order_tbl = decodedContents
             else
+                print("json didnt exist, creating it now..")
                 appendfile(string.format("deposit/%s.json", plr.Name), httpservice:JSONEncode(getgenv().config.order_tbl)) -- if file doesn't exist, create it + current config table
             end
+        else
+            print("deposit folder did not exist")
+            makefolder("depsoit")
+            appendfile(filePath, httpservice:JSONEncode(getgenv().config.order_tbl))
         end
     end
     handleFiles()
