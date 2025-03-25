@@ -11,6 +11,8 @@ function main()
     local encodedConfig = ""
     local filePath = string.format("deposit/%s.json", plr.Name)
 
+    getgenv().order_tbl = {}
+
     getgenv().config.loadedInGame = true -- tells the order handling script the client is ready
 
     local ws
@@ -29,15 +31,15 @@ function main()
                 print("json file exists")
                 local fileContents = readfile(string.format("deposit/%s.json", plr.Name))
                 local decodedContents = httpservice:JSONDecode(fileContents)
-                getgenv().config.order_tbl = decodedContents
+                getgenv().order_tbl = decodedContents
             else
                 print("json didnt exist, creating it now..")
-                appendfile(string.format("deposit/%s.json", plr.Name), httpservice:JSONEncode(getgenv().config.order_tbl)) -- if file doesn't exist, create it + current config table
+                appendfile(string.format("deposit/%s.json", plr.Name), httpservice:JSONEncode(getgenv().order_tbl)) -- if file doesn't exist, create it + current config table
             end
         else
             print("deposit folder did not exist")
             makefolder("deposit")
-            appendfile(filePath, httpservice:JSONEncode(getgenv().config.order_tbl))
+            appendfile(filePath, httpservice:JSONEncode(getgenv().order_tbl))
             print("created json file")
         end
     end
@@ -46,9 +48,9 @@ function main()
     local function updateOrdersFile()
         while true do
             if isfile(filePath) then
-                writefile(filePath, httpservice:JSONEncode(getgenv().config.order_tbl))
+                writefile(filePath, httpservice:JSONEncode(getgenv().order_tbl))
             else
-                appendfile(filePath, httpservice:JSONEncode(getgenv().config.order_tbl))
+                appendfile(filePath, httpservice:JSONEncode(getgenv().order_tbl))
             end
             task.wait(1)
         end
@@ -58,9 +60,9 @@ function main()
         while true do
             if isfile(filePath) then
                 local contents = readfile(filePath)
-                getgenv().config.order_tbl = httpservice:JSONDecode(contents)
+                getgenv().order_tbl = httpservice:JSONDecode(contents)
             else
-                appendfile(filePath, httpservice:JSONEncode(getgenv().config.order_tbl))
+                appendfile(filePath, httpservice:JSONEncode(getgenv().order_tbl))
             end
             task.wait(1)
         end
@@ -100,8 +102,8 @@ function main()
 
             if data["type"] == "deposit_order" then
                 if data["alt_username"] == plr.Name then
-                    getgenv().config.order_tbl[data["customer"]] = data["order_id"]
-                    for i,v in getgenv().config.order_tbl do print(i,v) end
+                    getgenv().order_tbl[data["customer"]] = data["order_id"]
+                    for i,v in getgenv().order_tbl do print(i,v) end
                 end
                 
             elseif data["type"] == "ping" and data["username"] == plr.Name then
@@ -190,13 +192,13 @@ function main()
 
         print("checking if the order ID is in the order table")
 
-        if getgenv().config.order_tbl[info["depositer"]] then
-            depoit_data["message"]["order_id"] = getgenv().config.order_tbl[info["depositer"]]
+        if getgenv().order_tbl[info["depositer"]] then
+            depoit_data["message"]["order_id"] = getgenv().order_tbl[info["depositer"]]
             print("Order ID is in the order table!")
 
             ws:Send(httpservice:JSONEncode(depoit_data)) -- sending the deposit data to the server in a JSON
 
-            getgenv().config.order_tbl[info["depositer"]] = nil
+            getgenv().order_tbl[info["depositer"]] = nil
         end
     end
     end)
