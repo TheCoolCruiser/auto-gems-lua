@@ -273,7 +273,7 @@ function main()
         local PlaceId = game.PlaceId
         teleportService:Teleport(PlaceId, plr)
     end
-    task.spawn(rejoin)
+    -- task.spawn(rejoin)
 
     plr.OnTeleport:Connect(function()
         print("Player is being teleported..")
