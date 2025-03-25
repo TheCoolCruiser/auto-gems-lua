@@ -36,8 +36,9 @@ function main()
             end
         else
             print("deposit folder did not exist")
-            makefolder("depsoit")
+            makefolder("deposit")
             appendfile(filePath, httpservice:JSONEncode(getgenv().config.order_tbl))
+            print("created json file")
         end
     end
     handleFiles()
