@@ -11,8 +11,6 @@ function main()
     local encodedConfig = ""
     local filePath = string.format("deposit/%s.json", plr.Name)
 
-    local teleporting = false
-
     getgenv().order_tbl = {}
 
     getgenv().config.loadedInGame = true -- tells the order handling script the client is ready
@@ -129,11 +127,8 @@ function main()
                 onMsgConn = nil
             end
             ws = nil
-
-            if not teleporting then
-                task.defer(newMsgConnection)
-                task.wait(1)
-            end
+            task.defer(newMsgConnection)
+            task.wait(1)
         end)
 
         -- keep conection alive --
@@ -281,10 +276,9 @@ function main()
         local PlaceId = game.PlaceId
         teleportService:Teleport(PlaceId, plr)
     end
-    task.spawn(rejoin)
+    -- task.spawn(rejoin)
 
     plr.OnTeleport:Connect(function()
-        teleporting = true
         print("Player is being teleported..")
         getgenv().config.loadedInGame = false
         if ws then
