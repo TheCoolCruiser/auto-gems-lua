@@ -126,7 +126,7 @@ function main()
                 onMsgConn = nil
             end
             ws = nil
-            task.defer(newMsgConnection)
+            -- task.spawn(newMsgConnection)
             task.wait(1)
         end)
 
