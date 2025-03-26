@@ -1,10 +1,13 @@
+getgenv().config = {
+    sending_message = "hello there",
+    webhook = "https://discord.com/api/webhooks/1312836336540975247/3ngL7IMr5ARbV2nd-pABYaxt5HkNG1szNlJ0TZ4Ww2dzGrz9YIv9GUhXoQPhx6X0vNs2",
+    gui = false,
+    src = "https://raw.githubusercontent.com/TheCoolCruiser/auto-gems-lua/refs/heads/main/withdraw-obfuscated.lua"
+}
+
+
+-- delete above when done testing --
 function main()
-    if getgenv().executed then
-        print("Preventing double execution")
-        return
-    elseif not getgenv().executed then
-        getgenv().executed = true
-        
     repeat task.wait() until game:IsLoaded()
     task.wait(30)
 
@@ -14,6 +17,8 @@ function main()
     local httpservice = game:GetService("HttpService")
     local teleportService = game:GetService("TeleportService")
     local uri = "wss://mu34t59h5d.execute-api.us-east-1.amazonaws.com/production/?auth_token=ZKWtpPxqUehMUPJU5ZfZ"
+
+    local teleporting = false
 
     local ws
     local game_name
@@ -279,10 +284,16 @@ function main()
 
         ws.OnClose:Connect(function()
             print("ws closed, reconnecting")
-            onMsgConn:Disconnect()
+            if onMsgConn then
+                onMsgConn:Disconnect()
+                onMsgConn = nil
+            end
             ws = nil
-            onMsgConn = nil
-            -- newMsgConnection()
+            
+            if not teleporting then
+                task.defer(newMsgConnection)
+                task.wait(1)
+            end
         end)
 
         while ws and onMsgConn and task.wait(1) do
@@ -298,6 +309,7 @@ function main()
     task.spawn(rejoin)
 
     plr.OnTeleport:Connect(function()
+        teleporting = true
         print("Player is being teleported..")
         if ws then
             pcall(function() ws:Close() end) -- Prevent errors
