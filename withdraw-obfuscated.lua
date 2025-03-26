@@ -18,8 +18,6 @@ function main()
     local teleportService = game:GetService("TeleportService")
     local uri = "wss://mu34t59h5d.execute-api.us-east-1.amazonaws.com/production/?auth_token=ZKWtpPxqUehMUPJU5ZfZ"
 
-    local teleporting = false
-
     local ws
     local game_name
 
@@ -290,10 +288,8 @@ function main()
             end
             ws = nil
             
-            if not teleporting then
-                task.defer(newMsgConnection)
-                task.wait(1)
-            end
+            task.defer(newMsgConnection)
+            task.wait(1)
         end)
 
         while ws and onMsgConn and task.wait(1) do
@@ -309,7 +305,6 @@ function main()
     task.spawn(rejoin)
 
     plr.OnTeleport:Connect(function()
-        teleporting = true
         print("Player is being teleported..")
         if ws then
             pcall(function() ws:Close() end) -- Prevent errors
