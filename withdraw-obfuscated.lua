@@ -288,7 +288,7 @@ function main()
             end
             ws = nil
             
-            task.defer(newMsgConnection)
+            -- task.defer(newMsgConnection)
             task.wait(1)
         end)
 
