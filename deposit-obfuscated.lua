@@ -1,6 +1,5 @@
 function main()
     repeat task.wait() until game:IsLoaded()
-    task.wait(15)
     local plrs = game:GetService("Players")
     local plr = plrs.LocalPlayer
     local rs = game:GetService("ReplicatedStorage")
