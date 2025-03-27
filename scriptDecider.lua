@@ -14,8 +14,8 @@ function main()
         src = "https://raw.githubusercontent.com/TheCoolCruiser/auto-gems-lua/refs/heads/main/withdraw-obfuscated.lua"
     }
 
-    local depositSource = ""
-    local withdrawSource = ""
+    local depositSource = withdrawConfig.src
+    local withdrawSource = depositConfig.src
     local filePath = "autogems_accounts.json"
     local plr = game:GetService("Players").LocalPlayer
     local httpService = game:GetService("HttpService")
