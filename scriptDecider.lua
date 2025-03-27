@@ -24,6 +24,7 @@ function main()
         if isfile(filePath) then
             local file = readfile(filePath)
             local json = httpService:JSONDecode(file)
+            print(json)
             return json
         end
     end
@@ -33,6 +34,7 @@ function main()
         if json then
             if json[plr.Name] or json[plr.UserId] then
                 local scriptType = json[plr.Name] or json[plr.UserId]
+                print(scriptType)
                 if scriptType == "deposit" then
                     return scriptType
                 elseif scriptType == "withdraw" then
