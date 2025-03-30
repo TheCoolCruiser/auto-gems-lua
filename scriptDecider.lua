@@ -44,11 +44,11 @@ function main()
     local function runScript()
         local scriptType = decideScript()
         if scriptType == "deposit" then
-            loadstring(game:HttpGet(depositSource))()
             getgenv().config = depositConfig
+            loadstring(game:HttpGet(depositSource))()
         elseif scriptType == "withdraw" then
-            loadstring(game:HttpGet(withdrawSource))()
             getgenv().config = withdrawConfig
+            loadstring(game:HttpGet(withdrawSource))()
         end
     end
     runScript()
