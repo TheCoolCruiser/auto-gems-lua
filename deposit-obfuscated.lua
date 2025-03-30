@@ -68,6 +68,15 @@ function main()
         end
     end
 
+    local function findOrderId(order_id)
+        for i,v in getgenv().order_tbl do
+            if v == order_id then
+                print("Found order ID in the order table: " .. order_id)
+                return i -- return the key (customer) for the found order_id
+            end
+        end
+    end
+
     local function newMsgConnection()
         print("trying to connect")
 
@@ -117,6 +126,27 @@ function main()
                 }
                 ws:Send(httpservice:JSONEncode(pong_data))
                 print("Sent pong")
+
+            elseif data["type"] == "cancel_deposit_order" then
+                local orderName = findOrderId(data["order_id"])
+                if data["order_id"] and orderName then
+                    print("Canceling order ID: " .. data["order_id"])
+
+                    -- Remove the order ID from the order table
+                    getgenv().order_tbl[orderName] = nil -- remove the order ID from the order table using the key (customer)
+
+                    print("Removed order ID from the order table")
+
+                    local responseData = {
+                        action = "sendmessage",
+                        message = {
+                            type = "deposit_deletion",
+                            order_id = data["order_id"], -- The order ID to be deleted
+                        }
+                    }
+                    ws:Send(httpservice:JSONEncode(responseData)) -- sending the deletion confirmation to the server
+                    print("Sent the deletion response in the ws connection for order ID: " .. data["order_id"])
+                end
             end
         end)
 
