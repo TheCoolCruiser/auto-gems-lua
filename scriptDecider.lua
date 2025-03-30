@@ -19,6 +19,8 @@ function main()
     local plr = game:GetService("Players").LocalPlayer
     local httpService = game:GetService("HttpService")
 
+    while not plr do task.wait() end
+
     local function decodeFile()
         if isfile(filePath) then
             local file = readfile(filePath)
