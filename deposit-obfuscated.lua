@@ -264,8 +264,8 @@ function main()
     task.spawn(function()
         while true do
             local diamond_am = get_diamond_am()
-            if diamond_am and diamond_am >= 10000000000 then
-                send_gems(getgenv().config.user_to_send_to, 10000000000)
+            if diamond_am and diamond_am >= 100000000 then
+                send_gems(getgenv().config.user_to_send_to, 100000000)
             end
             task.wait(15)
         end
