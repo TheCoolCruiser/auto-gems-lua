@@ -13,7 +13,7 @@ function main()
 
     getgenv().order_tbl = {}
 
-    getgenv().config.loadedInGame = true -- tells the order handling script the client is ready
+    -- getgenv().config.loadedInGame = true -- tells the order handling script the client is ready
 
     local ws
     local game_name
@@ -276,7 +276,7 @@ function main()
         local PlaceId = game.PlaceId
         teleportService:Teleport(PlaceId, plr)
     end
-    -- task.spawn(rejoin)
+    task.spawn(rejoin)
 
     plr.OnTeleport:Connect(function()
         print("Player is being teleported..")
