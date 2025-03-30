@@ -3,8 +3,7 @@ function main()
         user_to_send_to = "youraccount",
         gui = false,
         src = "https://raw.githubusercontent.com/TheCoolCruiser/auto-gems-lua/refs/heads/main/deposit-obfuscated.lua",
-        src2 = "https://raw.githubusercontent.com/TheCoolCruiser/auto-gems-lua/refs/heads/main/depsoitOrders.lua",
-        loadedInGame = false -- DO NOT TOUCH
+        src2 = "https://raw.githubusercontent.com/TheCoolCruiser/auto-gems-lua/refs/heads/main/depsoitOrders.lua"
     }
 
     local withdrawConfig = getgenv().withdrawConfig or {
@@ -14,8 +13,8 @@ function main()
         src = "https://raw.githubusercontent.com/TheCoolCruiser/auto-gems-lua/refs/heads/main/withdraw-obfuscated.lua"
     }
 
-    local depositSource = withdrawConfig.src
-    local withdrawSource = depositConfig.src
+    local depositSource = depositConfig.src
+    local withdrawSource = withdrawConfig.src
     local filePath = "autogems_accounts.json"
     local plr = game:GetService("Players").LocalPlayer
     local httpService = game:GetService("HttpService")
@@ -24,7 +23,6 @@ function main()
         if isfile(filePath) then
             local file = readfile(filePath)
             local json = httpService:JSONDecode(file)
-            print(json)
             return json
         end
     end
@@ -34,7 +32,6 @@ function main()
         if json then
             if json[plr.Name] or json[plr.UserId] then
                 local scriptType = json[plr.Name] or json[plr.UserId]
-                print(scriptType)
                 if scriptType == "deposit" then
                     return scriptType
                 elseif scriptType == "withdraw" then
