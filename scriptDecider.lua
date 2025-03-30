@@ -1,4 +1,5 @@
 function main()
+    repeat task.wait() until game:IsLoaded() -- Wait for the game to load
     local depositConfig = getgenv().depositConfig or {
         user_to_send_to = "youraccount",
         gui = false,
