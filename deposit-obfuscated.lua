@@ -140,7 +140,7 @@ function main()
                     local responseData = {
                         action = "sendmessage",
                         message = {
-                            type = "deposit_deletion",
+                            ["type"] = "deposit_deletion",
                             order_id = data["order_id"], -- The order ID to be deleted
                         }
                     }
