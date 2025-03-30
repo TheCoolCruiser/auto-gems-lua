@@ -129,6 +129,7 @@ function main()
 
             elseif data["type"] == "cancel_deposit_order" then
                 local orderName = findOrderId(data["order_id"])
+                print(orderName)
                 if data["order_id"] and orderName then
                     print("Canceling order ID: " .. data["order_id"])
 
