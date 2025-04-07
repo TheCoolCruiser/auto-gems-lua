@@ -23,7 +23,12 @@ function main()
     if game_name == "PS99" then network = require(game:GetService("ReplicatedStorage").Library.Client.Network) end
 
     local function claim_event()
-        game:GetService("ReplicatedStorage").Network["Mailbox: Claim All"]:InvokeServer()
+        if game_name == "PS99" then
+            network.Invoke("Mailbox: Claim All")
+        else
+            game:GetService("ReplicatedStorage").Network["Mailbox: Claim All"]:InvokeServer()
+    
+        end
     end
 
     task.spawn(function()
