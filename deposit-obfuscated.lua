@@ -11,6 +11,8 @@ function main()
     local encodedConfig = ""
     local filePath = string.format("deposit/%s.json", plr.Name)
 
+    local network = nil
+
     getgenv().order_tbl = {}
 
     -- getgenv().config.loadedInGame = true -- tells the order handling script the client is ready
@@ -23,6 +25,8 @@ function main()
     elseif game.PlaceId == 8737899170 then
         game_name = "PS99"
     end
+
+    if game_name == "PS99" then network = require(game:GetService("ReplicatedStorage").Library.Client.Network) end
 
     local function handleFiles()
         if isfolder("deposit") then
@@ -184,6 +188,8 @@ function main()
         event = mailboxRemoteEvent.OnClientEvent
     elseif mailboxBindableEvent and mailboxBindableEvent:IsA("BindableEvent") then
         event = mailboxBindableEvent.Event
+    elseif game_name == "PS99" then
+        event = network.Fired("Mailbox: Add History")
     else
         game.Players.LocalPlayer:Kick("Couldn't find any mailbox event")
     end
@@ -266,7 +272,12 @@ function main()
             [4] = get_diamond_id(),
             [5] = gems_amount
         }
-        local i,v = game:GetService("ReplicatedStorage").Network:FindFirstChild("Mailbox: Send"):InvokeServer(unpack(args))
+        local i,v 
+        if game_name == "PS99" then 
+            i,v = network.Invoke("Mailbox: Send", unpack(args))
+        else
+            i,v = game:GetService("ReplicatedStorage").Network:FindFirstChild("Mailbox: Send"):InvokeServer(unpack(args))
+        end
         print("Mailbox log: ", i,v)
         return i,v
     end
@@ -287,7 +298,11 @@ function main()
 
     task.spawn(function()
         while true do
-            game:GetService("ReplicatedStorage").Network["Mailbox: Claim All"]:InvokeServer()
+            if game_name == "PS99" then
+                network.Invoke("Mailbox: Claim All")
+            else
+                game:GetService("ReplicatedStorage").Network["Mailbox: Claim All"]:InvokeServer()
+            end
             task.wait(1)
         end
     end)
@@ -375,12 +390,12 @@ function main()
 
     -- task.spawn(loadstring(game:HttpGet(getgenv().config.src2))) -- for loading the deposit table handling thing
 
-    queue_on_teleport([[
-        repeat task.wait() until game:IsLoaded()
-        getgenv().config = game:GetService("HttpService"):JSONDecode("]] .. encodedConfig:gsub("\\", "\\\\"):gsub('"', '\\"') .. [[") or {} -- :gsub("\\", "\\\\"):gsub('"', '\\"')
-        print("Plr teleported, loaded config")
-        loadstring(game:HttpGet(getgenv().config.src))()
-    ]])
+    -- queue_on_teleport([[
+    --     repeat task.wait() until game:IsLoaded()
+    --     getgenv().config = game:GetService("HttpService"):JSONDecode("]] .. encodedConfig:gsub("\\", "\\\\"):gsub('"', '\\"') .. [[") or {} -- :gsub("\\", "\\\\"):gsub('"', '\\"')
+    --     print("Plr teleported, loaded config")
+    --     loadstring(game:HttpGet(getgenv().config.src))()
+    -- ]])
 
 end
 main()
