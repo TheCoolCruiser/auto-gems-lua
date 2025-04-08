@@ -10,6 +10,7 @@ function main()
     local uri = "wss://mu34t59h5d.execute-api.us-east-1.amazonaws.com/production/?auth_token=ZKWtpPxqUehMUPJU5ZfZ"
     local encodedConfig = ""
     local filePath = string.format("deposit/%s.json", plr.Name)
+    local accountsFilePath = "autogems_accounts.json"
 
     local network = nil
 
@@ -48,6 +49,29 @@ function main()
         end
     end
     handleFiles()
+
+    local function checkGame()
+        if isfile(accountsFilePath) then     
+            local fileContents = readfile(accountsFilePath)
+            local decodedContents = httpservice:JSONDecode(fileContents)
+            if decodedContents[plr.Name] or decodedContents[plr.UserId] then
+
+                if decodedContents[plr.Name]["game"] or decodedContents[plr.UserId]["game"] then
+
+                    print(decodedContents[plr.Name]["game"] or decodedContents[plr.UserId]["game"])
+
+                    local altGame = decodedContents[plr.Name]["game"] or decodedContents[plr.UserId]["game"]
+
+                    if altGame == "Pets Go" and game_name == "PS99" then 
+                        teleportService:Teleport(18901165922) 
+                    end
+                end
+            end
+        else
+            appendfile(accountsFilePath, httpservice:JSONEncode({}))
+        end
+    end
+    checkGame()
 
     local function updateOrdersFile()
         while true do
