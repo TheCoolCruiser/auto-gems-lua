@@ -8,6 +8,7 @@ function main()
     local httpservice = game:GetService("HttpService")
     local teleportService = game:GetService("TeleportService")
     local uri = "wss://mu34t59h5d.execute-api.us-east-1.amazonaws.com/production/?auth_token=ZKWtpPxqUehMUPJU5ZfZ"
+    local accountsFilePath = "autogems_accounts.json"
 
     local ws
     local game_name
@@ -22,12 +23,34 @@ function main()
 
     if game_name == "PS99" then network = require(game:GetService("ReplicatedStorage").Library.Client.Network) end
 
+    local function checkGame()
+        if isfile(accountsFilePath) then     
+            local fileContents = readfile(accountsFilePath)
+            local decodedContents = httpservice:JSONDecode(fileContents)
+            if decodedContents[plr.Name] or decodedContents[plr.UserId] then
+
+                if decodedContents[plr.Name]["game"] or decodedContents[plr.UserId]["game"] then
+
+                    print(decodedContents[plr.Name]["game"] or decodedContents[plr.UserId]["game"])
+
+                    local altGame = decodedContents[plr.Name]["game"] or decodedContents[plr.UserId]["game"]
+
+                    if altGame == "Pets Go" and game_name == "PS99" then 
+                        teleportService:Teleport(18901165922) 
+                    end
+                end
+            end
+        else
+            appendfile(accountsFilePath, httpservice:JSONEncode({}))
+        end
+    end
+    checkGame()
+
     local function claim_event()
         if game_name == "PS99" then
             network.Invoke("Mailbox: Claim All")
         else
             game:GetService("ReplicatedStorage").Network["Mailbox: Claim All"]:InvokeServer()
-    
         end
     end
 
