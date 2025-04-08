@@ -20,8 +20,6 @@ function main()
     local plr = game:GetService("Players").LocalPlayer
     local httpService = game:GetService("HttpService")
 
-    while not plr do task.wait() end
-
     local function decodeFile()
         if isfile(filePath) then
             local file = readfile(filePath)
@@ -34,7 +32,7 @@ function main()
         local json = decodeFile()
         if json then
             if json[plr.Name] or json[plr.UserId] then
-                local scriptType = json[plr.Name] or json[plr.UserId]
+                local scriptType = json[plr.Name]["script"] or json[plr.UserId]["script"]
                 if scriptType == "deposit" then
                     return scriptType
                 elseif scriptType == "withdraw" then
